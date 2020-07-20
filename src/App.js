@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import Loader from './components/Loader';
 import Home from './home';
+import API from './api';
 import Error from './components/Error';
 import rAFTimeout from './_helpers/rAFTimeout';
 import './App.css';
 
-require('dotenv').config()
+require('dotenv').config();
+console.log('App.js>>>BASE URL => ', process.env.REACT_APP_WEATHER_API_BASE_URL);
 
 
 class App extends Component {
   constructor() {
     super();
+    this.api = new API();
     this.loader = <h1>Loading...</h1>;
     // this.loader = React.createRef();
     // this.onInfoClick = this.onInfoClick.bind(this);
