@@ -1,6 +1,6 @@
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 .App-logo {
   height: 40vmin;
@@ -36,3 +36,55 @@
     transform: rotate(360deg);
   }
 }
+
+/* Project CSS */
+body {
+  background: #2f0d50;
+  color: #fff;
+  font-family: monospace;
+  font-size: 16px;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+input,
+textarea,
+button,
+select,
+label,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.App {
+  background: linear-gradient(to bottom, #a555f5, #5d2297);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Media Queries */
+@media screen and (min-width: 768px) {
+  #root {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+  }
+
+  .App {
+    border-radius: 10px;
+    box-shadow: 0 3px 20px 0 rgba(0, 0, 0, .06);
+    height: 667px;
+    overflow: hidden;
+    width: 375px;
+  }
+}
+
+/* Project CSS */
