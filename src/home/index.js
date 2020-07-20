@@ -1,13 +1,15 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import GPSLocation from '../components/GPSLocation';
+import Navbar from '../components/Navbar';
+import Location from '../components/Location';
+import DateCurrent from '../components/DateCurrent';
 
 class Home extends PureComponent {
     constructor() {
         super();    
         this.state = {
-        //   currentForecast: 'hourly',
-        //   forecastIndex: ['hourly', 'daily'],
+          currentLocation: 'West Bengal',
+          currentDate: (new Date()).toISOString(),
         };
     }
 
@@ -15,7 +17,10 @@ class Home extends PureComponent {
 
     render = () => (
         <Fragment>
-            <GPSLocation onGPSLocationClick={() => {}} />
+            <Navbar />
+            <Location location={this.state.currentLocation} />
+            <DateCurrent date={this.state.currentDate} />
+            <div className="stretch"></div>
         </Fragment>
     );
 }
@@ -26,7 +31,7 @@ Home.propTypes = {
     // updating: PropTypes.bool,
     // lastUpdate: PropTypes.string,
     // currentCondition: PropTypes.object,
-    onGPSLocationClick: PropTypes.func,
+    // onGPSLocationClick: PropTypes.func,
     // onInfoClick: PropTypes.func,
     // onInfoClose: PropTypes.func,
     // onRefreshClick: PropTypes.func
