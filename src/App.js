@@ -4,16 +4,17 @@ import Home from './home';
 import API from './api';
 import Error from './components/Error';
 import rAFTimeout from './_helpers/rAFTimeout';
+import IpFetcher from './_helpers/ip_fetch';
 import './App.css';
 
 require('dotenv').config();
-console.log('App.js>>>BASE URL => ', process.env.REACT_APP_WEATHER_API_BASE_URL);
 
 
 class App extends Component {
   constructor() {
     super();
     this.api = new API();
+    this.ipFetcher = new IpFetcher();
     this.loader = <h1>Loading...</h1>;
     // this.loader = React.createRef();
     // this.onInfoClick = this.onInfoClick.bind(this);
@@ -22,35 +23,52 @@ class App extends Component {
     // this.onGPSLocationClick = this.onGPSLocationClick.bind(this);
 
     // this.storage = new Storage(process.env.REACT_APP_DARK_SKY_API_CODE);
-    // this.state = { ...this.storage.data };
+    this.state = { ip: "", currentLocation: {} };
+  }
+
+  componentDidMount() {
+    this.init();
   }
 
   async init() {
-    rAFTimeout(() => this.loader.current.animateIn(), 100);
+    // rAFTimeout(() => this.loader.current.animateIn(), 100);
 
-    await this.storage.fetch();
-
+    await this._updateIP();
+    const { current: currentWeather, location } = await this.api._getCurrentWeather(this.state.ip);
+    console.log('CURRENT LOCATION =>> ', location);
+    console.log('WEATHER REPORT => ', currentWeather);
     rAFTimeout(() => {
-      this.loader.current.animateOut();
+      // this.loader.current.animateOut();
 
-      rAFTimeout(() => this.updatedState(this.storage), 600);
+      rAFTimeout(() => this.updatedState(), 600);
     }, 1000);
   }
 
-  updatedState({ ipGeoLocation, data }) {
-    if (ipGeoLocation.data && ipGeoLocation.data.error) {
+  updatedState() {
+    if (this.state.ip !== "") {
       this.setState({
-        error: ipGeoLocation.data.error,
+        error: "",
         dataLoaded: true,
       });
     } else {
       this.setState({
-        ...data,
         showInfo: false,
         dataLoaded: true,
         updating: false,
       });
     }
+  }
+
+  async _updateIP() {
+    if (localStorage.getItem('ip')) {
+      this.ipFetcher.ip = localStorage.getItem('ip');
+    } else {
+      await this.ipFetcher.fetch();
+      localStorage.setItem('ip', this.ipFetcher.ip);
+    }
+    this.setState({
+      ip: this.ipFetcher.ip
+    });
   }
 
   display() {
@@ -69,16 +87,16 @@ class App extends Component {
   }
 
   render = () => (
-    // <div className="App">
-    //     {
-    //       !this.state.dataLoaded ? <Loader ref={this.loader} /> : this.display()
-    //     }
-    // </div>
     <div className="App">
         {
-          this.display()
+          !this.state.dataLoaded ? this.loader : this.display()
         }
     </div>
+    // <div className="App">
+    //     {
+    //       this.display()
+    //     }
+    // </div>
   )
 }
 
