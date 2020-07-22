@@ -98,7 +98,7 @@ class App extends Component {
 
   displayHome() {
     return (
-      <Home location={this.state.currentLocation}></Home>
+      <Home location={this.state.currentLocation} weather={this.state.currentWeather}></Home>
     )
   }
 

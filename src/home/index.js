@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Navbar from '../components/Navbar';
 import Location from '../components/Location';
 import DateCurrent from '../components/DateCurrent';
+import Overview from '../components/Overview';
 
 class Home extends PureComponent {
     constructor() {
@@ -20,6 +21,7 @@ class Home extends PureComponent {
             <Navbar />
             <Location location={this.props.location.name} />
             <DateCurrent date={this.props.location.localtime} />
+            <Overview info={this.props.weather.condition.text} temperature={this.props.weather.temp_c} overviewIcon={this.props.weather.condition.icon}/>
             <div className="stretch"></div>
         </Fragment>
     );
@@ -30,7 +32,8 @@ Home.propTypes = {
     // foreCastDaily: PropTypes.array,
     // updating: PropTypes.bool,
     // lastUpdate: PropTypes.string,
-    // currentCondition: PropTypes.object,
+    location: PropTypes.object,
+    weather: PropTypes.object,
     // onGPSLocationClick: PropTypes.func,
     // onInfoClick: PropTypes.func,
     // onInfoClose: PropTypes.func,
