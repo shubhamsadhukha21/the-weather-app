@@ -7,10 +7,10 @@ import DateCurrent from '../components/DateCurrent';
 class Home extends PureComponent {
     constructor() {
         super();    
-        this.state = {
-          currentLocation: 'West Bengal',
-          currentDate: (new Date()).toISOString(),
-        };
+        // this.state = {
+        //   currentLocation: this.props.location,
+        //   currentDate: (new Date()).toISOString(),
+        // };
     }
 
     componentDidMount() {}
@@ -18,8 +18,8 @@ class Home extends PureComponent {
     render = () => (
         <Fragment>
             <Navbar />
-            <Location location={this.state.currentLocation} />
-            <DateCurrent date={this.state.currentDate} />
+            <Location location={this.props.location.name} />
+            <DateCurrent date={this.props.location.localtime} />
             <div className="stretch"></div>
         </Fragment>
     );

@@ -3,24 +3,17 @@ export default class API {
     this.BASE_URL = process.env.REACT_APP_WEATHER_API_BASE_URL;
     this.API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
     // this.API_URL = this.BASE_URL + "?key=" + this.API_KEY;
+    this.lastWeather = {};
   }
 
   async _getCurrentWeather(locationIp) {
-    fetch(this.BASE_URL + "current.json" + "?key=" + this.API_KEY + "&q=" + locationIp)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log('RES =>> ', result);
-          return result;
-        },
-        (error) => {
-          console.log('ERROR =>> ', error);
-          return { location: {}, current: {} };
-        }
-      )
-      .catch((error) => {
-        console.log('ERROR catch block =>> ', error);
-        return { location: {}, current: {} };
-      })
+    try {
+      const response = await fetch(this.BASE_URL + "current.json" + "?key=" + this.API_KEY + "&q=" + locationIp);
+      const result = await response.json();
+      this.lastWeather = result;
+      console.log('API::_getCurrentWeather::RES =>> ', this.lastWeather);
+    } catch (error) {
+      throw new Error(`API::_getCurrentWeather::Error : ${error.message}`);
+    }
   }
 }

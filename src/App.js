@@ -23,7 +23,7 @@ class App extends Component {
     // this.onGPSLocationClick = this.onGPSLocationClick.bind(this);
 
     // this.storage = new Storage(process.env.REACT_APP_DARK_SKY_API_CODE);
-    this.state = { ip: "", currentLocation: {} };
+    this.state = { ip: "", currentLocation: {}, currentWeather: {} };
   }
 
   componentDidMount() {
@@ -33,10 +33,8 @@ class App extends Component {
   async init() {
     // rAFTimeout(() => this.loader.current.animateIn(), 100);
 
-    await this._updateIP();
-    const { current: currentWeather, location } = await this.api._getCurrentWeather(this.state.ip);
-    console.log('CURRENT LOCATION =>> ', location);
-    console.log('WEATHER REPORT => ', currentWeather);
+    await this.updateIP();
+    await this.getCurrentWeather();
     rAFTimeout(() => {
       // this.loader.current.animateOut();
 
@@ -45,7 +43,7 @@ class App extends Component {
   }
 
   updatedState() {
-    if (this.state.ip !== "") {
+    if (this.state.ip !== "" && this.state.currentWeather && this.state.currentWeather.location) {
       this.setState({
         error: "",
         dataLoaded: true,
@@ -59,7 +57,7 @@ class App extends Component {
     }
   }
 
-  async _updateIP() {
+  async updateIP() {
     if (localStorage.getItem('ip')) {
       this.ipFetcher.ip = localStorage.getItem('ip');
     } else {
@@ -69,6 +67,24 @@ class App extends Component {
     this.setState({
       ip: this.ipFetcher.ip
     });
+  }
+
+  async getCurrentWeather() {
+    if (localStorage.getItem('lastWeather')) {
+      try {
+        this.api.lastWeather = JSON.parse(localStorage.getItem('lastWeather'));
+      } catch (error) {
+        throw new Error(`JSON parse error: ${error.message}`);
+      }
+    } else {
+      await this.api._getCurrentWeather(this.state.ip)
+      localStorage.setItem('lastWeather', JSON.stringify(this.api.lastWeather));
+    }
+    this.setState({
+      currentWeather: this.api.lastWeather.current,
+      currentLocation: this.api.lastWeather.location,
+    });
+    console.log('APP STATE => ', this.state);
   }
 
   display() {
@@ -82,7 +98,7 @@ class App extends Component {
 
   displayHome() {
     return (
-      <Home></Home>
+      <Home location={this.state.currentLocation}></Home>
     )
   }
 
@@ -92,11 +108,6 @@ class App extends Component {
           !this.state.dataLoaded ? this.loader : this.display()
         }
     </div>
-    // <div className="App">
-    //     {
-    //       this.display()
-    //     }
-    // </div>
   )
 }
 
