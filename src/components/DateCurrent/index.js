@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import moment from 'moment'
 import PropTypes from 'prop-types';
 import rAFTimeout from '../../_helpers/rAFTimeout';
 import './index.css';
@@ -21,7 +22,7 @@ class DateCurrent extends PureComponent {
       return (
         <section className="date-current">
           <span ref={this.text} className="date-current__text">
-            {this.props.date}
+            {moment(this.props.date).format('LLL')}
           </span>
         </section>
       )

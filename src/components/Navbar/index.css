@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #4a1381;
+  background-color: rgba(0,0,0,0.22);
   padding-top: .5em;
 	padding-bottom: .5em;
 	-webkit-box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.75);

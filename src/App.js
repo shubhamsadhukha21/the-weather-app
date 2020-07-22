@@ -5,6 +5,7 @@ import API from './api';
 import Error from './components/Error';
 import rAFTimeout from './_helpers/rAFTimeout';
 import IpFetcher from './_helpers/ip_fetch';
+import 'swiper/swiper-bundle.min.css'
 import './App.css';
 
 require('dotenv').config();
@@ -23,7 +24,7 @@ class App extends Component {
     // this.onGPSLocationClick = this.onGPSLocationClick.bind(this);
 
     // this.storage = new Storage(process.env.REACT_APP_DARK_SKY_API_CODE);
-    this.state = { ip: "", currentLocation: {}, currentWeather: {} };
+    this.state = { ip: "", currentLocation: {}, currentWeather: {}, forecast: {} };
   }
 
   componentDidMount() {
@@ -35,6 +36,7 @@ class App extends Component {
 
     await this.updateIP();
     await this.getCurrentWeather();
+    await this.getForecast();
     rAFTimeout(() => {
       // this.loader.current.animateOut();
 
@@ -84,6 +86,22 @@ class App extends Component {
       currentWeather: this.api.lastWeather.current,
       currentLocation: this.api.lastWeather.location,
     });
+  }
+
+  async getForecast() {
+    if (localStorage.getItem('forecast')) {
+      try {
+        this.api.forecast = JSON.parse(localStorage.getItem('forecast'));
+      } catch (error) {
+        throw new Error(`JSON parse error: ${error.message}`);
+      }
+    } else {
+      await this.api._getForecast(this.state.currentLocation.lat, this.state.currentLocation.lon)
+      localStorage.setItem('forecast', JSON.stringify(this.api.forecast));
+    }
+    this.setState({
+      forecast: this.api.forecast,
+    });
     console.log('APP STATE => ', this.state);
   }
 
@@ -98,7 +116,11 @@ class App extends Component {
 
   displayHome() {
     return (
-      <Home location={this.state.currentLocation} weather={this.state.currentWeather}></Home>
+      <Home
+        location={this.state.currentLocation}
+        weather={this.state.currentWeather}
+        forecast={this.state.forecast.forecast}>
+      </Home>
     )
   }
 

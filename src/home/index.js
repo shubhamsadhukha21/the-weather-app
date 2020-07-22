@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Location from '../components/Location';
 import DateCurrent from '../components/DateCurrent';
 import Overview from '../components/Overview';
+import Forecast from '../components/Forecast';
 
 class Home extends PureComponent {
     constructor() {
@@ -22,6 +23,14 @@ class Home extends PureComponent {
             <Location location={this.props.location.name} />
             <DateCurrent date={this.props.location.localtime} />
             <Overview info={this.props.weather.condition.text} temperature={this.props.weather.temp_c} overviewIcon={this.props.weather.condition.icon}/>
+            <section className="forecasts">
+                <div className="swiper-wrapper">
+                    <Forecast forecastDays={this.props.forecast.forecastday} />
+                </div>
+            </section>
+            {/* <section className="forecasts">
+                <Forecast forecastDays={this.props.forecast.forecastday} />
+            </section> */}
             <div className="stretch"></div>
         </Fragment>
     );
